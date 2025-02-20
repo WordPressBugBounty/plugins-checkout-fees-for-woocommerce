@@ -139,9 +139,11 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 			}
 			if ( $add_fees ) {
 				$this->add_gateways_fees( $order, $payment_method );
+
 				// Update payment method record in the database.
-				update_post_meta( $order_id, '_payment_method', $payment_method );
-				update_post_meta( $order_id, '_payment_method_title', $payment_method_title );
+				$order->set_payment_method( $payment_method );
+				$order->set_payment_method_title( $payment_method_title );
+				$order->save();
 			}
 
 			// Declare $order again to fetch updates to post meta and serve to payment templte engine.
@@ -156,7 +158,6 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 					'fragments' => $woocommerce_order_pay,
 				)
 			);
-
 		}
 
 		/**
@@ -286,7 +287,6 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 					wc_add_order_item_meta( $item_id, '_last_added_fee', $item->get_name() );
 				}
 			}
-
 		}
 
 		/**
@@ -735,6 +735,7 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 		 * @param float  $final_fee_to_add Final fee to add on checkout.
 		 * @param float  $total_in_cart Total fees added to cart.
 		 * @param string $fee_num Fee number.
+		 * @param object $order Order object.
 		 * @since   2.6
 		 */
 		public function calculate_the_fee( $args, $final_fee_to_add, $total_in_cart, $fee_num, $order ) {
@@ -762,7 +763,7 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 					if ( 0 != $args['product_id'] ) { //phpcs:ignore
 						$_product    = wc_get_product( $args['product_id'] );
 						$sum_for_fee = $_product->get_price() * $args['product_qty'];
-					} else {
+					} else { //phpcs:ignore
 						if ( (float) 0 === $total_in_cart ) {
 							$cf_on_fees = apply_filters( 'alg_wc_not_to_calculate_on_fees', true );
 							if ( $cf_on_fees ) {
@@ -851,8 +852,8 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 		 * @param object $fees Fees Object.
 		 * @param array  $calculate_tax_for Calculate tax array.
 		 */
-		public function alg_wc_order_item_fee_after_calculate_taxes( $fees, $calculate_tax_for ) {
-			if ( $fees->get_tax_status() != 'taxable' ) {
+		public function alg_wc_order_item_fee_after_calculate_taxes( $fees, $calculate_tax_for ) { //phpcs:ignore
+			if ( $fees->get_tax_status() != 'taxable' ) { //phpcs:ignore
 				if ( $fees->get_total() < 0 ) {
 					$fees->set_tax_class( '' );
 					$fees->set_tax_status( 'none' );

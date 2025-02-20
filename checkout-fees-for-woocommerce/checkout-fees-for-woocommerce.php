@@ -1,9 +1,9 @@
-<?php
+<?php // phpcs:ignore
 /**
  * Plugin Name: Payment Gateway Based Fees and Discounts for WooCommerce
  * Plugin URI: https://www.tychesoftwares.com/store/premium-plugins/payment-gateway-based-fees-and-discounts-for-woocommerce-plugin/
  * Description: Set payment gateways fees and discounts in WooCommerce.
- * Version: 2.15.0
+ * Version: 2.16.0
  * Author: Tyche Softwares
  * Author URI: https://www.tychesoftwares.com/
  * Text Domain: checkout-fees-for-woocommerce
@@ -12,24 +12,23 @@
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * Requires Plugins: woocommerce
- * WC tested up to: 9.4.2
- * Tested up to: 6.7.1
+ * WC tested up to: 9.6.2
+ * Tested up to: 6.7.2
  * Requires PHP: 7.4
  * WC requires at least: 5.0.0
  *
  * @package checkout-fees-for-woocommerce
  */
 
-// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+	exit; // Exit if accessed directly.
 }
 use Automattic\WooCommerce\Utilities\OrderUtil;
 
 // Check if WooCommerce is active.
 $plugin_name = 'woocommerce/woocommerce.php';
 if (
-	! in_array( $plugin_name, apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) ) ) &&
+	! in_array( $plugin_name, apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) ) ) && // phpcs:ignore
 	! ( is_multisite() && array_key_exists( $plugin_name, get_site_option( 'active_sitewide_plugins', array() ) ) )
 ) {
 	return;
@@ -39,7 +38,7 @@ if ( 'checkout-fees-for-woocommerce.php' === basename( __FILE__ ) ) {
 	// Check if Pro is active, if so then return.
 	$plugin_name = 'checkout-fees-for-woocommerce-pro/checkout-fees-for-woocommerce-pro.php';
 	if (
-		in_array( $plugin_name, apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) ) ) ||
+		in_array( $plugin_name, apply_filters( 'active_plugins', get_option( 'active_plugins', array() ) ) ) || // phpcs:ignore
 		( is_multisite() && array_key_exists( $plugin_name, get_site_option( 'active_sitewide_plugins', array() ) ) )
 	) {
 		return;
@@ -62,7 +61,7 @@ if ( ! class_exists( 'Alg_Woocommerce_Checkout_Fees' ) ) :
 		 * @var   string
 		 * @since 2.1.0
 		 */
-		public $version = '2.15.0';
+		public $version = '2.16.0';
 
 		/**
 		 * The single instance of the class.
@@ -147,7 +146,6 @@ if ( ! class_exists( 'Alg_Woocommerce_Checkout_Fees' ) ) :
 					add_action( 'admin_init', array( $this, 'version_updated' ) );
 				}
 			}
-
 		}
 
 		/**
@@ -315,7 +313,7 @@ if ( ! function_exists( 'alg_wc_cf' ) ) {
 	 * @version 2.3.0
 	 * @return  Alg_Woocommerce_Checkout_Fees
 	 */
-	function alg_wc_cf() {
+	function alg_wc_cf() { // phpcs:ignore
 		return Alg_Woocommerce_Checkout_Fees::instance();
 	}
 }

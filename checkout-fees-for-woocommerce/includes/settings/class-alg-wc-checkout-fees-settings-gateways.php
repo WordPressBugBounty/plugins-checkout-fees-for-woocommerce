@@ -57,6 +57,9 @@ if ( ! class_exists( 'Alg_WC_Checkout_Fees_Settings_Gateways' ) ) :
 					if ( 'alma' === $key ) {
 						$sections[ sanitize_title( $key ) ] = $gateway->method_title;
 					}
+					if ( 'woocommerce_payments' === $key || 'woocommerce_payments_bancontact' === $key || 'woocommerce_payments_sepa_debit' === $key || 'woocommerce_payments_giropay' === $key || 'woocommerce_payments_sofort' === $key || 'woocommerce_payments_p24' === $key || 'woocommerce_payments_ideal' === $key || 'woocommerce_payments_au_becs_debit' === $key || 'woocommerce_payments_eps' === $key || 'woocommerce_payments_affirm' === $key || 'woocommerce_payments_afterpay_clearpay' === $key || 'woocommerce_payments_klarna' === $key ) {
+						$sections[ sanitize_title( $key ) ] = $gateway->get_title();
+					}
 				}
 			}
 			return $sections;
@@ -133,7 +136,7 @@ if ( ! class_exists( 'Alg_WC_Checkout_Fees_Settings_Gateways' ) ) :
 
 			// Cats.
 			$product_cats       = array();
-			$product_categories = get_terms( 'product_cat', 'orderby=name&hide_empty=0' );
+			$product_categories = get_terms( 'product_cat', 'orderby=name&hide_empty=0' ); //phpcs:ignore
 			if ( ! empty( $product_categories ) && ! is_wp_error( $product_categories ) ) {
 				foreach ( $product_categories as $product_category ) {
 					$product_cats[ $product_category->term_id ] = $product_category->name;
@@ -637,7 +640,6 @@ if ( ! class_exists( 'Alg_WC_Checkout_Fees_Settings_Gateways' ) ) :
 
 			return $settings;
 		}
-
 	}
 
 endif;
