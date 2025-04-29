@@ -183,6 +183,20 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 		}
 
 		/**
+		 * Clear existing fees from the order.
+		 */
+		public function clear_existing_fees( $order ) {
+			foreach ( $order->get_items( 'fee' ) as $item_id => $item ) {
+				// Check if the fee's title matches 'fee'
+				if ( 'Fee' === $item->get_name() ) {
+					$order->remove_item( $item_id );
+				}
+			}
+			$order->calculate_totals();
+			$order->save();
+		}
+
+		/**
 		 * Add fees for a payment gateway based on local/global settings.
 		 *
 		 * @param WC_Order $order Order object.
@@ -196,6 +210,10 @@ if ( ! class_exists( 'Alg_WC_Order_Fees' ) ) :
 			if ( $this->do_merge_fees ) {
 				$this->fees = array();
 			}
+
+			// Clear previous fees for order.
+			$this->clear_existing_fees( $order );
+
 			// Add fee - globally.
 			$do_add_fees_global = $checkout_obj->check_countries( $current_gateway );
 			if ( $do_add_fees_global ) {
