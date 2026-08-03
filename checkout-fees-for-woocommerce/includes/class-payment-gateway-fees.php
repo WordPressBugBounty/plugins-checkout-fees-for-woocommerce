@@ -30,7 +30,7 @@ final class Plugin {
 	 *
 	 * @var string
 	 */
-	public $version = '3.2.0';
+	public $version = '3.2.1';
 
 	/**
 	 * Core fee calculation object.
@@ -85,7 +85,7 @@ final class Plugin {
 	 */
 	private function init_hooks(): void {
 
-		register_setting( 'options', 'pgbf_pro_allow_tracking', [
+		register_setting( 'options', 'pgbf_lite_allow_tracking', [
 			'type'         => 'string',
 			'default'      => '',
 			'show_in_rest' => true,
