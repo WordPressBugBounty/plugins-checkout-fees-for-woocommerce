@@ -436,6 +436,7 @@ class Checkout_Fees {
 			$current_gateway = $this->resolve_stripe_apm_gateway( $current_gateway );
 		}
 		$current_gateway                  = apply_filters( 'alg_wc_checkout_current_gateway', $current_gateway );
+		$current_gateway                  = sanitize_key( $current_gateway );
 		$this->last_known_current_gateway = $current_gateway;
 		return $current_gateway;
 	}
@@ -625,7 +626,8 @@ class Checkout_Fees {
 					// IF cart has depsoit then use it as base for fee calculation instead of total.
 					$deposit_base  = 0;
 					$deposit_found = false;
-					foreach ( WC()->cart->get_cart() as $_item ) {
+					$cart_items    = ( function_exists( 'WC' ) && WC()->cart ) ? WC()->cart->get_cart() : array();
+            		foreach ( $cart_items as $_item ) {
 						if ( isset( $_item['deposit_amount'] ) && (float) $_item['deposit_amount'] > 0 ) {
 							$deposit_base += (float) $_item['deposit_amount'] * (int) $_item['quantity'];
 							$deposit_found = true;
